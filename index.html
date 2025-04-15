@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" onload="console.log('Page loaded, but roof will not be drawn automatically.')">
+<script>
+    function drawRoof() {
+        const floorWidth = parseFloat(document.getElementById('floor_width').value);
+        const backHeight = parseFloat(document.getElementById('back_height').value);
+        const frontHeight = parseFloat(document.getElementById('front_height').value);
+        const roofLength = parseFloat(document.getElementById('roof_length').value);
+
+        if (isNaN(floorWidth) || isNaN(backHeight) || isNaN(frontHeight) || isNaN(roofLength)) {
+            alert('Please enter valid numbers for all fields.');
+            return;
+        }
+
+        const canvas = document.getElementById('roofCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = floorWidth + 100; // Add some margin to fit the drawing
+        canvas.height = Math.max(backHeight, frontHeight) + 100; // Adjust height dynamically based on dimensions
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // the canvas coordinates start from the top left corner
+        const startX = 50; // Ensure the drawing starts with a margin
+        const startY = canvas.height - 50; // Adjust startY to fit the roof within the canvas
+
+        // Draw back height in red
+        ctx.beginPath();
+        ctx.strokeStyle = 'red';
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(startX, startY - backHeight);
+        ctx.stroke();
+
+        // Draw front height in green
+        ctx.beginPath();
+        ctx.strokeStyle = 'green';
+        ctx.moveTo(startX + floorWidth, startY);
+        ctx.lineTo(startX + floorWidth, startY - frontHeight);
+        ctx.stroke();
+
+        // Draw floor width in light blue
+        ctx.beginPath();
+        ctx.strokeStyle = 'lightblue';
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(startX + floorWidth, startY);
+        ctx.stroke();
+
+        // Draw flat roof
+        ctx.beginPath();
+        ctx.strokeStyle = 'black';
+        ctx.moveTo(startX, startY - backHeight);
+        ctx.lineTo(startX + roofLength, startY - backHeight);
+        ctx.stroke();
+    }
+</script>
+<script>
+    function updateCanvasDimensionsInKey(canvas) {
+        const keyDiv = document.querySelector('div > h3').parentElement;
+        let dimensionsInfo = document.getElementById('canvas-dimensions-info');
+
+        if (!dimensionsInfo) {
+            dimensionsInfo = document.createElement('p');
+            dimensionsInfo.id = 'canvas-dimensions-info';
+            keyDiv.appendChild(dimensionsInfo);
+        }
+
+        dimensionsInfo.textContent = `Canvas Dimensions: Width = ${canvas.width}px, Height = ${canvas.height}px`;
+    }
+
+    // Modify drawRoof to call updateCanvasDimensionsInKey
+    const originalDrawRoof = drawRoof;
+    drawRoof = function () {
+        originalDrawRoof();
+        const canvas = document.getElementById('roofCanvas');
+        updateCanvasDimensionsInKey(canvas);
+    };
+</script>
+<head>
+    <div style="margin-top: 20px;">
+        <h3>Key:</h3>
+        <ul>
+            <li><span style="color: red;">Red Line:</span> Back Height</li>
+            <li><span style="color: green;">Green Line:</span> Front Height</li>
+            <li><span style="color: lightblue;">Light Blue Line:</span> Floor Width</li>
+            <li><span style="color: black;">Black Line:</span> Roof</li>
+        </ul>
+    </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roof Pitch Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            border: 1px solid #000;
+            display: block;
+            margin-top: 20px;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Roof Pitch Calculator</h1>
+    <div>
+        <div class="input-group">
+            <label for="floor_width">Floor Width: </label>
+            <input type="number" id="floor_width" value="350" placeholder="Enter floor width">
+        </div>
+        <div class="input-group">
+            <label for="back_height">Back Height: </label>
+            <input type="number" id="back_height" value="240" placeholder="Enter back height">
+        </div>
+        <div class="input-group">
+            <label for="front_height">Front Height: </label>
+            <input type="number" id="front_height" value="250" placeholder="Enter front height">
+        </div>
+        <div class="input-group">
+            <label for="angle">Angle (degrees): </label>
+            <input type="number" id="angle" value="4" placeholder="Enter angle">
+        </div>
+        <div class="input-group">
+            <label for="roof_length">Roof Length: </label>
+            <input type="number" id="roof_length" value="420" placeholder="Enter roof length">
+        </div>
+        <div class="input-group">
+            <label for="scale_factor">Scale Factor (% of screen width): </label>
+            <input type="number" id="scale_factor" value="80" placeholder="Enter scale factor">
+        </div>
+        <button onclick="drawRoof()">Draw Roof</button>
+    </div>
+    <canvas id="roofCanvas"></canvas>
+
+
+</body>
+</html>
