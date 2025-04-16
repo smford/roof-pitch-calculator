@@ -6,6 +6,8 @@
         const backHeight = parseFloat(document.getElementById('back_height').value);
         const frontHeight = parseFloat(document.getElementById('front_height').value);
         const roofLength = parseFloat(document.getElementById('roof_length').value);
+        const backoverhang = parseFloat(document.getElementById('back_overhang').value);
+        const frontoverhang = parseFloat(document.getElementById('front_overhang').value);
 
         if (isNaN(floorWidth) || isNaN(backHeight) || isNaN(frontHeight) || isNaN(roofLength)) {
             alert('Please enter valid numbers for all fields.');
@@ -15,13 +17,13 @@
         const canvas = document.getElementById('roofCanvas');
         const ctx = canvas.getContext('2d');
 
-        canvas.width = floorWidth + 100; // Add some margin to fit the drawing
+        canvas.width = floorWidth + backoverhang+frontoverhang+100; // Add some margin to fit the drawing
         canvas.height = Math.max(backHeight, frontHeight) + 100; // Adjust height dynamically based on dimensions
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // the canvas coordinates start from the top left corner
-        const startX = 50; // Ensure the drawing starts with a margin
+        const startX = 50+backoverhang; // Ensure the drawing starts with a margin
         const startY = canvas.height - 50; // Adjust startY to fit the roof within the canvas
 
         // Draw back height in red
@@ -30,6 +32,7 @@
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX, startY - backHeight);
         ctx.stroke();
+
 
         // Draw front height in green
         ctx.beginPath();
@@ -49,8 +52,49 @@
         ctx.beginPath();
         ctx.strokeStyle = 'black';
         ctx.moveTo(startX, startY - backHeight);
-        ctx.lineTo(startX + roofLength, startY - backHeight);
+        ctx.lineTo(startX + floorWidth, startY-frontHeight);
         ctx.stroke();
+
+// Calculate the roof angle
+const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (180 / Math.PI);
+        const roofAngleRounded = roofAngle.toFixed(2);
+
+        // Draw back overhang in orange
+        ctx.beginPath();
+        ctx.strokeStyle = 'orange';
+        ctx.moveTo(startX, startY - backHeight);
+        ctx.lineTo(
+            startX - backoverhang * Math.cos(Math.PI * roofAngle / 180),
+            (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180)
+        );
+        ctx.stroke();
+
+        // Draw front overhang in purple
+        ctx.beginPath();
+        ctx.strokeStyle = 'purple';
+        ctx.moveTo(startX + floorWidth, startY - frontHeight);
+        //ctx.lineTo(startX + floorWidth + frontoverhang, startY - frontHeight);
+        ctx.lineTo(
+            startX + floorWidth + frontoverhang * Math.cos(Math.PI * roofAngle / 180),
+            (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180)
+        );
+        ctx.stroke();
+
+                // Calculate and display the roof line length
+                const roofLineLength = Math.sqrt(
+            Math.pow(floorWidth, 2) + Math.pow(backHeight - frontHeight, 2)
+        ).toFixed(2);
+
+        // Calculate and display the roof angle and size
+
+        let roofInfoDisplay = document.getElementById('roof-info-display');
+        if (!roofInfoDisplay) {
+            roofInfoDisplay = document.createElement('p');
+            roofInfoDisplay.id = 'roof-info-display';
+            document.body.appendChild(roofInfoDisplay);
+        }
+
+        roofInfoDisplay.textContent = `Roof Line Length: ${parseFloat(roofLineLength) + backoverhang + frontoverhang} units, Roof Angle: ${roofAngleRounded}°`;
     }
 </script>
 <script>
@@ -129,6 +173,14 @@
         <div class="input-group">
             <label for="scale_factor">Scale Factor (% of screen width): </label>
             <input type="number" id="scale_factor" value="80" placeholder="Enter scale factor">
+        </div>
+        <div class="input-group">
+            <label for="front_overhang">Front Overhang: </label>
+            <input type="number" id="front_overhang" value="50" placeholder="Enter front overhang">
+        </div>
+        <div class="input-group">
+            <label for="back_overhang">Back Overhang: </label>
+            <input type="number" id="back_overhang" value="50" placeholder="Enter back overhang">
         </div>
         <button onclick="drawRoof()">Draw Roof</button>
     </div>
