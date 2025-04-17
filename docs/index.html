@@ -26,6 +26,8 @@
         const startX = 50+backoverhang; // Ensure the drawing starts with a margin
         const startY = canvas.height - 50; // Adjust startY to fit the roof within the canvas
 
+        maximumHeight = Math.max(backHeight, frontHeight);
+
         // Draw back height in red
         ctx.beginPath();
         ctx.strokeStyle = 'red';
@@ -55,9 +57,13 @@
         ctx.lineTo(startX + floorWidth, startY-frontHeight);
         ctx.stroke();
 
-// Calculate the roof angle
-const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (180 / Math.PI);
+        // Calculate the roof angle
+        const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (180 / Math.PI);
         const roofAngleRounded = roofAngle.toFixed(2);
+        /*
+        const roofPitchRow = document.getElementById('roof-pitch-row').children[1];
+        roofPitchRow.textContent = `${roofAngleRounded}°`;
+        */
 
         // Draw back overhang in orange
         ctx.beginPath();
@@ -68,17 +74,22 @@ const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (
             (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
         ctx.stroke();
+        maximumHeight = Math.min(maximumHeight, (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180)   );
+
+
 
         // Draw front overhang in purple
         ctx.beginPath();
         ctx.strokeStyle = 'purple';
         ctx.moveTo(startX + floorWidth, startY - frontHeight);
+
         //ctx.lineTo(startX + floorWidth + frontoverhang, startY - frontHeight);
         ctx.lineTo(
             startX + floorWidth + frontoverhang * Math.cos(Math.PI * roofAngle / 180),
             (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
         ctx.stroke();
+        maximumHeight = Math.min(maximumHeight, (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180)   );
 
                 // Calculate and display the roof line length
                 const roofLineLength = Math.sqrt(
@@ -95,6 +106,34 @@ const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (
         }
 
         roofInfoDisplay.textContent = `Roof Line Length: ${parseFloat(roofLineLength) + backoverhang + frontoverhang} units, Roof Angle: ${roofAngleRounded}°`;
+
+        // Update the maximum height in the table
+        const maximumHeightRow = document.getElementById('maximum-height-row').children[1];
+        maximumHeightRow.textContent = `${maximumHeight.toFixed(2)} units`;
+        // Update the total roof length in the table
+        const totalRoofLengthRow = document.getElementById('total-roof-length-row').children[1];
+        totalRoofLengthRow.textContent = `${parseFloat(roofLineLength) + backoverhang + frontoverhang} units`;
+        // Update the roof pitch in the table
+        const roofPitchRow = document.getElementById('roof-pitch-row').children[1];
+        roofPitchRow.textContent = `${roofAngleRounded}°`;
+        // Update the floor width in the table
+        const floorWidthRow = document.getElementById('floor-width-row').children[1];
+        floorWidthRow.textContent = `${floorWidth} units`;
+        // Update the back height in the table
+        const backHeightRow = document.getElementById('backheight-row').children[1];
+        backHeightRow.textContent = `${backHeight} units`;
+        // Update the front height in the table
+        const frontHeightRow = document.getElementById('front-overhang-height-right-row').children[1];
+        frontHeightRow.textContent = `${frontHeight} units`;
+
+        // Update the back overhang height left in the table
+        const backOverhangHeightLeftRow = document.getElementById('back-overhang-height-left-row').children[1];
+        backOverhangHeightLeftRow.textContent = `${(startY - backHeight)} units`;
+        // Update the back overhang height right in the table
+        const backOverhangHeightRightRow = document.getElementById('back-overhang-height-right-row').children[1];
+        backOverhangHeightRightRow.textContent = `${((startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180))} units`;
+
+
     }
 </script>
 <script>
@@ -120,15 +159,6 @@ const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (
     };
 </script>
 <head>
-    <div style="margin-top: 20px;">
-        <h3>Key:</h3>
-        <ul>
-            <li><span style="color: red;">Red Line:</span> Back Height</li>
-            <li><span style="color: green;">Green Line:</span> Front Height</li>
-            <li><span style="color: lightblue;">Light Blue Line:</span> Floor Width</li>
-            <li><span style="color: black;">Black Line:</span> Roof</li>
-        </ul>
-    </div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roof Pitch Calculator</title>
@@ -149,7 +179,9 @@ const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (
 </head>
 <body>
     <h1>Roof Pitch Calculator</h1>
-    <div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+    <div style="border: 2px solid black; padding: 10px; flex: 1;">
+        <h2>Input Parameters</h2>
         <div class="input-group">
             <label for="floor_width">Floor Width: </label>
             <input type="number" id="floor_width" value="350" placeholder="Enter floor width">
@@ -184,6 +216,64 @@ const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (
         </div>
         <button onclick="drawRoof()">Draw Roof</button>
     </div>
+
+    <div style="border: 2px solid black; padding: 10px; flex: 1;">
+        <h2>Information</h2>
+        <table border="0" style="width: 100%; text-align: left;">
+            <tr>
+                <th>Property</th>
+                <th>Value</th>
+            </tr>
+
+            <tr id="maximum-height-row">
+                <td>Maximum Height</td>
+                <td></td>
+            </tr>
+            <tr id="total-roof-length-row">
+                <td>Total Roof Length</td>
+                <td></td>
+            </tr>
+            <tr id="roof-pitch-row">
+                <td>Roof Pitch</td>
+                <td></td>
+            </tr>
+            <tr id="floor-width-row">
+                <td>Floor Width</td>
+                <td></td>
+            </tr>
+            <tr id="backheight-row">
+                <td>Back Height</td>
+                <td></td>
+            </tr>
+            <tr id="back-overhang-height-left-row">
+                <td>Back Overhang Height Left</td>
+                <td></td>
+            </tr>
+            <tr id="back-overhang-height-right-row">
+                <td>Back Overhang Height Right</td>
+                <td></td>
+            </tr>
+            <tr id="front-overhang-height-left-row">
+                <td>Front Overhang Height Left</td>
+                <td></td>
+            </tr>
+            <tr id="front-overhang-height-right-row">
+                <td>Front Overhang Height Right</td>
+                <td></td>
+            </tr>
+
+        </table>
+    </div>
+    <div style="border: 2px solid black; padding: 10px; flex: 1;">
+        <h2>Key:</h2>
+        <ul>
+            <li><span style="color: red;">Red Line:</span> Back Height</li>
+            <li><span style="color: green;">Green Line:</span> Front Height</li>
+            <li><span style="color: lightblue;">Light Blue Line:</span> Floor Width</li>
+            <li><span style="color: black;">Black Line:</span> Roof</li>
+        </ul>
+    </div>
+</div>
     <canvas id="roofCanvas"></canvas>
 
 
