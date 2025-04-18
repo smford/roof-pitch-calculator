@@ -16,38 +16,41 @@
 
         const canvas = document.getElementById('roofCanvas');
         const ctx = canvas.getContext('2d');
+        const padding = 50; // Padding for the canvas
 
-        canvas.width = floorWidth + backoverhang + frontoverhang + 100; // Add some margin to fit the drawing
-        canvas.height = Math.max(backHeight, frontHeight) + 100; // Adjust height dynamically based on dimensions
-        ctx.translate(0, canvas.height); // Move the origin to the bottom-left corner
-        ctx.scale(1, -1); // Flip the y-axis to make 0,0 at the bottom-left
-        canvas.height = Math.max(backHeight, frontHeight) + 100; // Adjust height dynamically based on dimensions
+        canvas.width = floorWidth + backoverhang + frontoverhang + 2 * padding; // Add some margin to fit the drawing
+        canvas.height = Math.max(backHeight, frontHeight) + 2 * padding; // Adjust height dynamically based on dimensions
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.translate(0, canvas.height); // Move the origin to the bottom-left corner
+        ctx.scale(1, -1); // Flip the y-axis to make 0,0 at the bottom-left
 
-        // the canvas coordinates start from the top left corner
-        const startX = 50+backoverhang; // Ensure the drawing starts with a margin
-        const startY = canvas.height - 50; // Adjust startY to fit the roof within the canvas
-
-        maximumHeight = Math.max(backHeight, frontHeight);
+        const startX = padding + backoverhang; // Ensure the drawing starts with a margin
+        const startY = padding; // Adjust startY to fit the roof within the canvas
 
         // Draw back height in red
         ctx.beginPath();
         ctx.strokeStyle = 'red';
+        console.log(`Back Height Start: (${startX}, ${startY})`);
+        console.log(`Back Height End: (${startX}, ${startY + backHeight})`);
         ctx.moveTo(startX, startY);
-        ctx.lineTo(startX, startY - backHeight);
+        ctx.lineTo(startX, startY + backHeight);
         ctx.stroke();
 
         // Draw front height in green
         ctx.beginPath();
         ctx.strokeStyle = 'green';
+        console.log(`Front Height Start: (${startX + floorWidth}, ${startY})`);
+        console.log(`Front Height End: (${startX + floorWidth}, ${startY + frontHeight})`);
         ctx.moveTo(startX + floorWidth, startY);
-        ctx.lineTo(startX + floorWidth, startY - frontHeight);
+        ctx.lineTo(startX + floorWidth, startY + frontHeight);
         ctx.stroke();
 
         // Draw floor width in light blue
         ctx.beginPath();
         ctx.strokeStyle = 'lightblue';
+        console.log(`Floor Width Start: (${startX}, ${startY})`);
+        console.log(`Floor Width End: (${startX + floorWidth}, ${startY})`);
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX + floorWidth, startY);
         ctx.stroke();
@@ -55,120 +58,75 @@
         // Draw flat roof
         ctx.beginPath();
         ctx.strokeStyle = 'black';
-        ctx.moveTo(startX, startY - backHeight);
-        ctx.lineTo(startX + floorWidth, startY-frontHeight);
+        console.log(`Roof Start: (${startX}, ${startY + backHeight})`);
+        console.log(`Roof End: (${startX + floorWidth}, ${startY + frontHeight})`);
+        ctx.moveTo(startX, startY + backHeight);
+        ctx.lineTo(startX + floorWidth, startY + frontHeight);
         ctx.stroke();
 
         // Calculate the roof angle
         const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (180 / Math.PI);
         const roofAngleRounded = roofAngle.toFixed(2);
-        /*
-        const roofPitchRow = document.getElementById('roof-pitch-row').children[1];
-        roofPitchRow.textContent = `${roofAngleRounded}°`;
-        */
 
         // Draw back overhang in orange
         ctx.beginPath();
         ctx.strokeStyle = 'orange';
-        // Back Over Hang X
-        const bohx1 = startX;
-        const bohx2 = startX - backoverhang * Math.cos(Math.PI * roofAngle / 180);
-        // Back Over Hang Y
-        const bohy1 = startY - backHeight;
-        const bohy2 = (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180);
-        // Back Over Hang Length
-        const bohl = Math.sqrt(Math.pow(bohx2 - bohx1, 2) + Math.pow(bohy2 - bohy1, 2));
-
-        console.log('Back Overhang X1,Y1:', bohx1.toFixed(2), 'x', bohy1.toFixed(2));
-        console.log('Back Overhang X2,Y2:', bohx2.toFixed(2), 'x', bohy2.toFixed(2));
-        console.log('Back Overhang Length:', bohl.toFixed(2));
-
-
-        /*
-        // working
-        ctx.moveTo(startX, startY - backHeight);
+        ctx.moveTo(startX, startY + backHeight);
         ctx.lineTo(
             startX - backoverhang * Math.cos(Math.PI * roofAngle / 180),
-            (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180)
+            startY + backHeight + backoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
-        */
-
-        ctx.moveTo(bohx1, bohy1);
-        ctx.lineTo(bohx2, bohy2);
         ctx.stroke();
-        //maximumHeight = Math.min(maximumHeight, (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180)   );
-
-
 
         // Draw front overhang in purple
         ctx.beginPath();
         ctx.strokeStyle = 'purple';
-        // Front Over Hang X
-        const fohx1 = startX + floorWidth;
-        const fohx2 = startX + floorWidth + frontoverhang * Math.cos(Math.PI * roofAngle / 180);
-        // Front Over Hang Y
-        const fohy1 = startY - frontHeight;
-        const fohy2 = (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180);
-        // Front Over Hang Length
-        const fohl = Math.sqrt(Math.pow(fohx2 - fohx1, 2) + Math.pow(fohy2 - fohy1, 2));
-
-        console.log('Front Overhang X1,Y1:', fohx1.toFixed(2), 'x', fohy1.toFixed(2));
-        console.log('Front Overhang X2,Y2:', fohx2.toFixed(2), 'x', fohy2.toFixed(2));
-        console.log('Front Overhang Length:', fohl.toFixed(2));
-
-        /* working
-        ctx.moveTo(startX + floorWidth, startY - frontHeight);
-        //ctx.lineTo(startX + floorWidth + frontoverhang, startY - frontHeight);
+        ctx.moveTo(startX + floorWidth, startY + frontHeight);
         ctx.lineTo(
             startX + floorWidth + frontoverhang * Math.cos(Math.PI * roofAngle / 180),
-            (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180)
+            startY + frontHeight - frontoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
-        */
-        ctx.moveTo(fohx1, fohy1);
-        ctx.lineTo(fohx2, fohy2);
         ctx.stroke();
-        maximumHeight = Math.min(maximumHeight, (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180)   );
 
-                // Calculate and display the roof line length
-                const roofLineLength = Math.sqrt(
+        // Calculate and display the roof line length
+        const roofLineLength = Math.sqrt(
             Math.pow(floorWidth, 2) + Math.pow(backHeight - frontHeight, 2)
         ).toFixed(2);
 
-        // Calculate and display the roof angle and size
-
-        console.log(`Roof Line Length: ${parseFloat(roofLineLength) + backoverhang + frontoverhang} units, Roof Angle: ${roofAngleRounded}°`);
-
-        // Update the maximum height in the table
-        //const maximumHeightRow = document.getElementById('maximum-height-row').children[1];
-        //maximumHeightRow.textContent = `${maximumHeight.toFixed(2)} units`;
         // Update the total roof length in the table
         const totalRoofLengthRow = document.getElementById('total-roof-length-row').children[1];
         totalRoofLengthRow.textContent = `${parseFloat(roofLineLength) + backoverhang + frontoverhang} units`;
+
         // Update the roof pitch in the table
         const roofPitchRow = document.getElementById('roof-pitch-row').children[1];
         roofPitchRow.textContent = `${roofAngleRounded}°`;
+
         // Update the floor width in the table
         const floorWidthRow = document.getElementById('floor-width-row').children[1];
         floorWidthRow.textContent = `${floorWidth} units`;
+
         // Update the back height in the table
         const backHeightRow = document.getElementById('backheight-row').children[1];
         backHeightRow.textContent = `${backHeight} units`;
+
         // Update the back overhang length in the table
         const backOverhangLengthRow = document.getElementById('back-overhang-length-row').children[1];
         backOverhangLengthRow.textContent = `${backoverhang} units`;
+
         // Update the front height in the table
         const frontHeightRow = document.getElementById('frontheight-row').children[1];
         frontHeightRow.textContent = `${frontHeight} units`;
-        // Update the front overhang height left in the table
+
+        // Update the front overhang length in the table
         const frontOverhangLengthRow = document.getElementById('front-overhang-length-row').children[1];
         frontOverhangLengthRow.textContent = `${frontoverhang} units`;
 
-        // Calculate the maximum height from backheight, frontheight, and the highest points of overhangs
+        // Calculate the maximum height
         const calculatedMaxHeight = Math.max(
             backHeight,
             frontHeight,
-            bohy2, // Highest point of back overhang
-            fohy2  // Highest point of front overhang
+            startY + backHeight + backoverhang * Math.sin(Math.PI * roofAngle / 180),
+            startY + frontHeight - frontoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
 
         // Update the maximum height in the table
