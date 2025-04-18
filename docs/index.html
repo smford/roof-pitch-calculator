@@ -68,11 +68,27 @@
         // Draw back overhang in orange
         ctx.beginPath();
         ctx.strokeStyle = 'orange';
+        // Back Over Hang X
+        const bohx1 = startX;
+        const bohx2 = startX - backoverhang * Math.cos(Math.PI * roofAngle / 180);
+        // Back Over Hang Y
+        const bohy1 = startY - backHeight;
+        const bohy2 = (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180);
+        // Back Over Hang Length
+        const bohl = Math.sqrt(Math.pow(bohx2 - bohx1, 2) + Math.pow(bohy2 - bohy1, 2));
+
+
+        /*
+        // working
         ctx.moveTo(startX, startY - backHeight);
         ctx.lineTo(
             startX - backoverhang * Math.cos(Math.PI * roofAngle / 180),
             (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
+        */
+
+        ctx.moveTo(bohx1, bohy1);
+        ctx.lineTo(bohx2, bohy2);
         ctx.stroke();
         maximumHeight = Math.min(maximumHeight, (startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180)   );
 
@@ -81,13 +97,25 @@
         // Draw front overhang in purple
         ctx.beginPath();
         ctx.strokeStyle = 'purple';
-        ctx.moveTo(startX + floorWidth, startY - frontHeight);
+        // Front Over Hang X
+        const fohx1 = startX + floorWidth;
+        const fohx2 = startX + floorWidth + frontoverhang * Math.cos(Math.PI * roofAngle / 180)
+        // Front Over Hang Y
+        const fohy1 = startY - frontHeight;
+        const fohy2 = (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180);
+        // Front Over Hang Length
+        const fohl = Math.sqrt(Math.pow(fohx2 - fohx1, 2) + Math.pow(fohy2 - fohy1, 2));
 
+        /* working
+        ctx.moveTo(startX + floorWidth, startY - frontHeight);
         //ctx.lineTo(startX + floorWidth + frontoverhang, startY - frontHeight);
         ctx.lineTo(
             startX + floorWidth + frontoverhang * Math.cos(Math.PI * roofAngle / 180),
             (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
+        */
+        ctx.moveTo(fohx1, fohy1);
+        ctx.lineTo(fohx2, fohy2);
         ctx.stroke();
         maximumHeight = Math.min(maximumHeight, (startY - frontHeight) - frontoverhang * Math.sin(Math.PI * roofAngle / 180)   );
 
@@ -108,8 +136,8 @@
         roofInfoDisplay.textContent = `Roof Line Length: ${parseFloat(roofLineLength) + backoverhang + frontoverhang} units, Roof Angle: ${roofAngleRounded}°`;
 
         // Update the maximum height in the table
-        const maximumHeightRow = document.getElementById('maximum-height-row').children[1];
-        maximumHeightRow.textContent = `${maximumHeight.toFixed(2)} units`;
+        //const maximumHeightRow = document.getElementById('maximum-height-row').children[1];
+        //maximumHeightRow.textContent = `${maximumHeight.toFixed(2)} units`;
         // Update the total roof length in the table
         const totalRoofLengthRow = document.getElementById('total-roof-length-row').children[1];
         totalRoofLengthRow.textContent = `${parseFloat(roofLineLength) + backoverhang + frontoverhang} units`;
@@ -122,18 +150,44 @@
         // Update the back height in the table
         const backHeightRow = document.getElementById('backheight-row').children[1];
         backHeightRow.textContent = `${backHeight} units`;
+        // Update the back overhang length in the table
+        const backOverhangLengthRow = document.getElementById('back-overhang-length-row').children[1];
+        backOverhangLengthRow.textContent = `${backoverhang} units`;
         // Update the front height in the table
-        const frontHeightRow = document.getElementById('front-overhang-height-right-row').children[1];
+        const frontHeightRow = document.getElementById('frontheight-row').children[1];
         frontHeightRow.textContent = `${frontHeight} units`;
+        // Update the front overhang height left in the table
+        const frontOverhangLengthRow = document.getElementById('front-overhang-length-row').children[1];
+        frontOverhangLengthRow.textContent = `${frontoverhang} units`;
+
 
         // Update the back overhang height left in the table
         const backOverhangHeightLeftRow = document.getElementById('back-overhang-height-left-row').children[1];
-        backOverhangHeightLeftRow.textContent = `${(startY - backHeight)} units`;
+        backOverhangHeightLeftRow.textContent = `${bohy1.toFixed(2)} units`;
         // Update the back overhang height right in the table
         const backOverhangHeightRightRow = document.getElementById('back-overhang-height-right-row').children[1];
-        backOverhangHeightRightRow.textContent = `${((startY - backHeight) + backoverhang * Math.sin(Math.PI * roofAngle / 180))} units`;
+        backOverhangHeightRightRow.textContent = `${bohy2.toFixed(2)} units`;
 
+        // Update the front overhang height left in the table
+        const frontOverhangHeightLeftRow = document.getElementById('front-overhang-height-left-row').children[1];
+        frontOverhangHeightLeftRow.textContent = `${fohy1.toFixed(2)} units`;
+        // Update the front overhang height right in the table
+        const frontOverhangHeightRightRow = document.getElementById('front-overhang-height-right-row').children[1];
+        frontOverhangHeightRightRow.textContent = `${fohy2.toFixed(2)} units`;
 
+        // Calculate the maximum height from backheight, frontheight, bohy1, bohy2, fohy1, and fohy2
+        const calculatedMaxHeight = Math.max(
+            backHeight,
+            frontHeight,
+            bohy1 - backHeight - 50,
+            bohy2,
+            fohy1,
+            fohy2
+        );
+
+        // Update the maximum height in the table
+        const calculatedMaxHeightRow = document.getElementById('maximum-height-row').children[1];
+        calculatedMaxHeightRow.textContent = `${calculatedMaxHeight.toFixed(2)} units`;
     }
 </script>
 <script>
@@ -243,6 +297,18 @@
             </tr>
             <tr id="backheight-row">
                 <td>Back Height</td>
+                <td></td>
+            </tr>
+            <tr id="back-overhang-length-row">
+                <td>Back Overhang Length</td>
+                <td></td>
+            </tr>
+            <tr id="frontheight-row">
+                <td>Front Height</td>
+                <td></td>
+            </tr>
+            <tr id="front-overhang-length-row">
+                <td>Front Overhang Length</td>
                 <td></td>
             </tr>
             <tr id="back-overhang-height-left-row">
