@@ -17,7 +17,10 @@
         const canvas = document.getElementById('roofCanvas');
         const ctx = canvas.getContext('2d');
 
-        canvas.width = floorWidth + backoverhang+frontoverhang+100; // Add some margin to fit the drawing
+        canvas.width = floorWidth + backoverhang + frontoverhang + 100; // Add some margin to fit the drawing
+        canvas.height = Math.max(backHeight, frontHeight) + 100; // Adjust height dynamically based on dimensions
+        ctx.translate(0, canvas.height); // Move the origin to the bottom-left corner
+        ctx.scale(1, -1); // Flip the y-axis to make 0,0 at the bottom-left
         canvas.height = Math.max(backHeight, frontHeight) + 100; // Adjust height dynamically based on dimensions
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -34,7 +37,6 @@
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX, startY - backHeight);
         ctx.stroke();
-
 
         // Draw front height in green
         ctx.beginPath();
