@@ -136,14 +136,7 @@
 
         // Calculate and display the roof angle and size
 
-        let roofInfoDisplay = document.getElementById('roof-info-display');
-        if (!roofInfoDisplay) {
-            roofInfoDisplay = document.createElement('p');
-            roofInfoDisplay.id = 'roof-info-display';
-            document.body.appendChild(roofInfoDisplay);
-        }
-
-        roofInfoDisplay.textContent = `Roof Line Length: ${parseFloat(roofLineLength) + backoverhang + frontoverhang} units, Roof Angle: ${roofAngleRounded}°`;
+        console.log(`Roof Line Length: ${parseFloat(roofLineLength) + backoverhang + frontoverhang} units, Roof Angle: ${roofAngleRounded}°`);
 
         // Update the maximum height in the table
         //const maximumHeightRow = document.getElementById('maximum-height-row').children[1];
@@ -185,16 +178,7 @@
 </script>
 <script>
     function updateCanvasDimensionsInKey(canvas) {
-        const keyDiv = document.querySelector('div > h2').parentElement;
-        let dimensionsInfo = document.getElementById('canvas-dimensions-info');
-
-        if (!dimensionsInfo) {
-            dimensionsInfo = document.createElement('p');
-            dimensionsInfo.id = 'canvas-dimensions-info';
-            keyDiv.appendChild(dimensionsInfo);
-        }
-
-        dimensionsInfo.textContent = `Canvas Dimensions: Width = ${canvas.width}px, Height = ${canvas.height}px`;
+        console.log(`Canvas Dimensions: Width = ${canvas.width}px, Height = ${canvas.height}px`);
     }
 
     // Modify drawRoof to call updateCanvasDimensionsInKey
