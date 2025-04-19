@@ -138,16 +138,15 @@
         const calculatedMaxHeight = Math.max(
             backHeight,
             frontHeight,
-            startY + backHeight + backoverhang * Math.sin(Math.PI * roofAngle / 180),
-            startY + frontHeight - frontoverhang * Math.sin(Math.PI * roofAngle / 180)
+            backHeight + backoverhang * Math.sin(Math.PI * roofAngle / 180),
+            frontHeight + frontoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
 
         // Update the maximum height in the table
         const calculatedMaxHeightRow = document.getElementById('maximum-height-row').children[1];
         calculatedMaxHeightRow.textContent = `${calculatedMaxHeight.toFixed(2)} units`;
     }
-</script>
-<script>
+
     function updateCanvasDimensionsInKey(canvas) {
         console.log(`Canvas Dimensions: Width = ${canvas.width}px, Height = ${canvas.height}px`);
     }
