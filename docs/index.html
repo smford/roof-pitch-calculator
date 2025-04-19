@@ -108,22 +108,6 @@
         const floorWidthRow = document.getElementById('floor-width-row').children[1];
         floorWidthRow.textContent = `${floorWidth} units`;
 
-        // Update the back height in the table
-        const backHeightRow = document.getElementById('backheight-row').children[1];
-        backHeightRow.textContent = `${backHeight} units`;
-
-        // Update the back overhang length in the table
-        const backOverhangLengthRow = document.getElementById('back-overhang-length-row').children[1];
-        backOverhangLengthRow.textContent = `${backoverhang} units`;
-
-        // Update the front height in the table
-        const frontHeightRow = document.getElementById('frontheight-row').children[1];
-        frontHeightRow.textContent = `${frontHeight} units`;
-
-        // Update the front overhang length in the table
-        const frontOverhangLengthRow = document.getElementById('front-overhang-length-row').children[1];
-        frontOverhangLengthRow.textContent = `${frontoverhang} units`;
-
         // Calculate the maximum height
         const calculatedMaxHeight = Math.max(
             backHeight,
@@ -240,22 +224,6 @@
             </tr>
             <tr id="floor-width-row">
                 <td>Floor Width</td>
-                <td></td>
-            </tr>
-            <tr id="backheight-row">
-                <td>Back Height</td>
-                <td></td>
-            </tr>
-            <tr id="back-overhang-length-row">
-                <td>Back Overhang Length</td>
-                <td></td>
-            </tr>
-            <tr id="frontheight-row">
-                <td>Front Height</td>
-                <td></td>
-            </tr>
-            <tr id="front-overhang-length-row">
-                <td>Front Overhang Length</td>
                 <td></td>
             </tr>
         </table>
