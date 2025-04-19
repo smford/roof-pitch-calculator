@@ -31,8 +31,6 @@
         // Draw back height in red
         ctx.beginPath();
         ctx.strokeStyle = 'red';
-        console.log(`Back Height Start: (${startX}, ${startY})`);
-        console.log(`Back Height End: (${startX}, ${startY + backHeight})`);
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX, startY + backHeight);
         ctx.stroke();
@@ -40,8 +38,6 @@
         // Draw front height in green
         ctx.beginPath();
         ctx.strokeStyle = 'green';
-        console.log(`Front Height Start: (${startX + floorWidth}, ${startY})`);
-        console.log(`Front Height End: (${startX + floorWidth}, ${startY + frontHeight})`);
         ctx.moveTo(startX + floorWidth, startY);
         ctx.lineTo(startX + floorWidth, startY + frontHeight);
         ctx.stroke();
@@ -49,8 +45,6 @@
         // Draw floor width in light blue
         ctx.beginPath();
         ctx.strokeStyle = 'lightblue';
-        console.log(`Floor Width Start: (${startX}, ${startY})`);
-        console.log(`Floor Width End: (${startX + floorWidth}, ${startY})`);
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX + floorWidth, startY);
         ctx.stroke();
@@ -58,8 +52,6 @@
         // Draw flat roof
         ctx.beginPath();
         ctx.strokeStyle = 'black';
-        console.log(`Roof Start: (${startX}, ${startY + backHeight})`);
-        console.log(`Roof End: (${startX + floorWidth}, ${startY + frontHeight})`);
         ctx.moveTo(startX, startY + backHeight);
         ctx.lineTo(startX + floorWidth, startY + frontHeight);
         ctx.stroke();
@@ -68,12 +60,11 @@
         const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (180 / Math.PI);
         const roofAngleRounded = roofAngle.toFixed(2);
 
-        /*
-         * This code snippet adjusts the `drawAngleFix` variable based on the relative heights of `backHeight` and `frontHeight`.
-         * - `drawAngleFix` is initialized to 1, which is the default value.
-         * - If `backHeight` is less than `frontHeight`, the value of `drawAngleFix` is set to -1.
-         * - This adjustment likely ensures that the drawing logic accounts for the slope or angle direction when rendering a roof pitch or similar structure.
-         * - The variable `drawAngleFix` is used as a multiplier to correct the angle calculation based on the height comparison.
+        /**
+         * Adjusts the `drawAngleFix` variable based on the relative heights of the back and front of a roof.
+         * - `drawAngleFix` is initialized to 1, assuming the back height is greater than or equal to the front height.
+         * - If the `backHeight` is less than the `frontHeight`, `drawAngleFix` is set to -1 to account for the inverted angle.
+         * This logic ensures correct angle calculations for the roof pitch.
          */
         var drawAngleFix = 1;
         if (backHeight < frontHeight) {
@@ -83,7 +74,6 @@
         // Draw back overhang in orange
         ctx.beginPath();
         ctx.strokeStyle = 'orange';
-
         ctx.moveTo(startX, startY + backHeight);
         ctx.lineTo(
             startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
@@ -146,6 +136,9 @@
         const calculatedMaxHeightRow = document.getElementById('maximum-height-row').children[1];
         calculatedMaxHeightRow.textContent = `${calculatedMaxHeight.toFixed(2)} units`;
     }
+
+    // Automatically draw the roof when the page loads
+    document.addEventListener('DOMContentLoaded', drawRoof);
 
     function updateCanvasDimensionsInKey(canvas) {
         console.log(`Canvas Dimensions: Width = ${canvas.width}px, Height = ${canvas.height}px`);
