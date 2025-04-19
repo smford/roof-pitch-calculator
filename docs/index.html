@@ -158,6 +158,13 @@
         const canvas = document.getElementById('roofCanvas');
         updateCanvasDimensionsInKey(canvas);
     };
+
+    // Add event listeners to input fields to trigger drawRoof on change
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', drawRoof);
+        });
+    });
 </script>
 <head>
     <meta charset="UTF-8">
