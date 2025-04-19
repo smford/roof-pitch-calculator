@@ -68,24 +68,37 @@
         const roofAngle = Math.atan(Math.abs(backHeight - frontHeight) / floorWidth) * (180 / Math.PI);
         const roofAngleRounded = roofAngle.toFixed(2);
 
+        /*
+         * This code snippet adjusts the `drawAngleFix` variable based on the relative heights of `backHeight` and `frontHeight`.
+         * - `drawAngleFix` is initialized to 1, which is the default value.
+         * - If `backHeight` is less than `frontHeight`, the value of `drawAngleFix` is set to -1.
+         * - This adjustment likely ensures that the drawing logic accounts for the slope or angle direction when rendering a roof pitch or similar structure.
+         * - The variable `drawAngleFix` is used as a multiplier to correct the angle calculation based on the height comparison.
+         */
+        var drawAngleFix = 1;
+        if (backHeight < frontHeight) {
+            drawAngleFix = -1;
+        }
+
         // Draw back overhang in orange
         ctx.beginPath();
         ctx.strokeStyle = 'orange';
+
         ctx.moveTo(startX, startY + backHeight);
         ctx.lineTo(
-            startX - backoverhang * Math.cos(Math.PI * roofAngle / 180),
-            startY + backHeight + backoverhang * Math.sin(Math.PI * roofAngle / 180)
+            startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
+            startY + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)
         );
         ctx.stroke();
 
         // Draw front overhang in purple
         ctx.beginPath();
         ctx.strokeStyle = 'purple';
-        ctx.moveTo(startX + floorWidth, startY + frontHeight);
-        ctx.lineTo(
-            startX + floorWidth + frontoverhang * Math.cos(Math.PI * roofAngle / 180),
-            startY + frontHeight - frontoverhang * Math.sin(Math.PI * roofAngle / 180)
+        ctx.moveTo(
+            startX + floorWidth + frontoverhang * Math.cos((Math.PI / 180) * roofAngle),
+            startY + frontHeight - drawAngleFix * frontoverhang * Math.sin((Math.PI / 180) * roofAngle)
         );
+        ctx.lineTo(startX + floorWidth, startY + frontHeight);
         ctx.stroke();
 
         // Calculate and display the roof line length
