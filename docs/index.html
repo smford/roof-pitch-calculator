@@ -104,6 +104,16 @@
         const roofPitchRow = document.getElementById('roof-pitch-row').children[1];
         roofPitchRow.textContent = `${roofAngleRounded}°`;
 
+        // Update the roof rise:run in the table
+        const roofRiseRunRow = document.getElementById('roof-riseoverrun-row').children[1];
+        //roofRiseRunRow.textContent = `${(backHeight - frontHeight).toFixed(2)}: ${floorWidth.toFixed(2)}`;
+        roofRiseRunRow.textContent = `${drawAngleFix*(backHeight - frontHeight).toFixed(2)}:${floorWidth.toFixed(2)}`;
+        roofRiseRunRow.textContent = `${
+        reduceFraction(
+            drawAngleFix*(backHeight - frontHeight).toFixed(2),
+            floorWidth.toFixed(2)
+)} and ${((drawAngleFix*(backHeight - frontHeight).toFixed(2))/floorWidth.toFixed(2)).toFixed(2)}`;
+
         // Update the floor width in the table
         const floorWidthRow = document.getElementById('floor-width-row').children[1];
         floorWidthRow.textContent = `${floorWidth} units`;
@@ -126,6 +136,16 @@
 
     function updateCanvasDimensionsInKey(canvas) {
         console.log(`Canvas Dimensions: Width = ${canvas.width}px, Height = ${canvas.height}px`);
+    }
+
+    // function to reduce a fraction to its simplest form
+    // source: https://www.geeksforgeeks.org/reduce-a-fraction-to-its-simplest-form-by-using-javascript/
+    function reduceFraction(number, denomin) {
+        var gcd = function gcd(a, b) {
+            return b ? gcd(b, a % b) : a;
+        };
+        gcd = gcd(number, denomin);
+        return `${number / gcd}:${denomin / gcd}`;
     }
 
     // Modify drawRoof to call updateCanvasDimensionsInKey
@@ -172,6 +192,10 @@
             <input type="number" id="floor_width" value="350" placeholder="Enter floor width">
         </div>
         <div class="input-group">
+            <label for="floor_thickness">Floor Thickness: </label>
+            <input type="number" id="floor_thickness" value="0" placeholder="Enter floor thickness">
+        </div>
+        <div class="input-group">
             <label for="back_height">Back Height: </label>
             <input type="number" id="back_height" value="240" placeholder="Enter back height">
         </div>
@@ -180,16 +204,12 @@
             <input type="number" id="front_height" value="250" placeholder="Enter front height">
         </div>
         <div class="input-group">
-            <label for="angle">Angle (degrees): </label>
-            <input type="number" id="angle" value="4" placeholder="Enter angle">
-        </div>
-        <div class="input-group">
             <label for="roof_length">Roof Length: </label>
             <input type="number" id="roof_length" value="420" placeholder="Enter roof length">
         </div>
         <div class="input-group">
-            <label for="scale_factor">Scale Factor (% of screen width): </label>
-            <input type="number" id="scale_factor" value="80" placeholder="Enter scale factor">
+            <label for="roof_thickness">Roof Thickness: </label>
+            <input type="number" id="roof_thickness" value="0" placeholder="Enter roof thickness">
         </div>
         <div class="input-group">
             <label for="front_overhang">Front Overhang: </label>
@@ -220,6 +240,10 @@
             </tr>
             <tr id="roof-pitch-row">
                 <td>Roof Pitch</td>
+                <td></td>
+            </tr>
+            <tr id="roof-riseoverrun-row">
+                <td>Roof Rise:Run</td>
                 <td></td>
             </tr>
             <tr id="floor-width-row">
