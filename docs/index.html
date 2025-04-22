@@ -89,6 +89,22 @@
         );
         ctx.stroke();
 
+        // draw a rectangle for the roof starting at the back overhang of thickness roofThickness
+        // need to rotate the canvas
+        ctx.rotate(roofAngle * (Math.PI / 180));
+        ctx.beginPath();
+        ctx.strokeStyle = 'black';
+        ctx.rect(
+            startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
+            startY + floorThickness + backHeight,
+            roofLength,
+            roofThickness
+        );
+        ctx.stroke();
+        // unrotate the canvas
+        ctx.rotate(-roofAngle * (Math.PI / 180));
+
+
         // Draw front overhang in purple
         ctx.beginPath();
         ctx.strokeStyle = 'purple';
