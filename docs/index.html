@@ -3,9 +3,11 @@
 <script>
     function drawRoof() {
         const floorWidth = parseFloat(document.getElementById('floor_width').value);
+        const floorThickness = parseFloat(document.getElementById('floor_thickness').value);
         const backHeight = parseFloat(document.getElementById('back_height').value);
         const frontHeight = parseFloat(document.getElementById('front_height').value);
         const roofLength = parseFloat(document.getElementById('roof_length').value);
+        const roofThickness = parseFloat(document.getElementById('roof_thickness').value);
         const backoverhang = parseFloat(document.getElementById('back_overhang').value);
         const frontoverhang = parseFloat(document.getElementById('front_overhang').value);
 
@@ -19,7 +21,7 @@
         const padding = 50; // Padding for the canvas
 
         canvas.width = floorWidth + backoverhang + frontoverhang + 2 * padding; // Add some margin to fit the drawing
-        canvas.height = Math.max(backHeight, frontHeight) + 2 * padding; // Adjust height dynamically based on dimensions
+        canvas.height = Math.max(backHeight, frontHeight) + 2 * padding + floorThickness + roofThickness; // Adjust height dynamically based on dimensions
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.translate(0, canvas.height); // Move the origin to the bottom-left corner
@@ -31,29 +33,35 @@
         // Draw back height in red
         ctx.beginPath();
         ctx.strokeStyle = 'red';
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(startX, startY + backHeight);
+        ctx.moveTo(startX, startY + floorThickness);
+        ctx.lineTo(startX, startY + floorThickness + backHeight);
         ctx.stroke();
 
         // Draw front height in green
         ctx.beginPath();
         ctx.strokeStyle = 'green';
-        ctx.moveTo(startX + floorWidth, startY);
-        ctx.lineTo(startX + floorWidth, startY + frontHeight);
+        ctx.moveTo(startX + floorWidth, startY + floorThickness);
+        ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
         ctx.stroke();
 
         // Draw floor width in light blue
+        /*
         ctx.beginPath();
         ctx.strokeStyle = 'lightblue';
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX + floorWidth, startY);
         ctx.stroke();
+        */
+        ctx.beginPath();
+        ctx.strokeStyle = 'lightblue';
+        ctx.rect(startX, startY, floorWidth, floorThickness);
+        ctx.stroke();
 
         // Draw flat roof
         ctx.beginPath();
         ctx.strokeStyle = 'black';
-        ctx.moveTo(startX, startY + backHeight);
-        ctx.lineTo(startX + floorWidth, startY + frontHeight);
+        ctx.moveTo(startX, startY + floorThickness + backHeight);
+        ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
         ctx.stroke();
 
         // Calculate the roof angle
@@ -74,10 +82,10 @@
         // Draw back overhang in orange
         ctx.beginPath();
         ctx.strokeStyle = 'orange';
-        ctx.moveTo(startX, startY + backHeight);
+        ctx.moveTo(startX, startY + floorThickness + backHeight);
         ctx.lineTo(
             startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
-            startY + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)
+            startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)
         );
         ctx.stroke();
 
@@ -86,9 +94,9 @@
         ctx.strokeStyle = 'purple';
         ctx.moveTo(
             startX + floorWidth + frontoverhang * Math.cos((Math.PI / 180) * roofAngle),
-            startY + frontHeight - drawAngleFix * frontoverhang * Math.sin((Math.PI / 180) * roofAngle)
+            startY + floorThickness + frontHeight - drawAngleFix * frontoverhang * Math.sin((Math.PI / 180) * roofAngle)
         );
-        ctx.lineTo(startX + floorWidth, startY + frontHeight);
+        ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
         ctx.stroke();
 
         // Calculate and display the roof line length
@@ -119,12 +127,17 @@
         floorWidthRow.textContent = `${floorWidth} units`;
 
         // Calculate the maximum height
-        const calculatedMaxHeight = Math.max(
+        let calculatedMaxHeight = Math.max(
             backHeight,
             frontHeight,
             backHeight + backoverhang * Math.sin(Math.PI * roofAngle / 180),
             frontHeight + frontoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
+
+        console.log(`Calculated Max Height (before adjustments): ${calculatedMaxHeight}`);
+        console.log(`Roof Thickness: ${roofThickness}, Floor Thickness: ${floorThickness}`);
+        calculatedMaxHeight = calculatedMaxHeight + roofThickness + floorThickness;
+        console.log(`Calculated Max Height (after adjustments): ${calculatedMaxHeight}`);
 
         // Update the maximum height in the table
         const calculatedMaxHeightRow = document.getElementById('maximum-height-row').children[1];
@@ -193,7 +206,7 @@
         </div>
         <div class="input-group">
             <label for="floor_thickness">Floor Thickness: </label>
-            <input type="number" id="floor_thickness" value="0" placeholder="Enter floor thickness">
+            <input type="number" id="floor_thickness" value="10" placeholder="Enter floor thickness">
         </div>
         <div class="input-group">
             <label for="back_height">Back Height: </label>
@@ -209,7 +222,7 @@
         </div>
         <div class="input-group">
             <label for="roof_thickness">Roof Thickness: </label>
-            <input type="number" id="roof_thickness" value="0" placeholder="Enter roof thickness">
+            <input type="number" id="roof_thickness" value="15" placeholder="Enter roof thickness">
         </div>
         <div class="input-group">
             <label for="front_overhang">Front Overhang: </label>
