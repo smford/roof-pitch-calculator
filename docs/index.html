@@ -285,6 +285,30 @@
             <input type="number" id="roof_thickness" value="15" placeholder="Enter roof thickness">
         </div>
         <div class="input-group">
+            <label for="desired_roof_pitch">Desired Roof Pitch (°): </label>
+            <input type="number" id="desired_roof_pitch" placeholder="Enter desired roof pitch">
+        </div>
+        <div class="input-group">
+            <button onclick="applyDesiredRoofPitch()">Apply Desired Roof Pitch</button>
+        </div>
+        <script>
+            function applyDesiredRoofPitch() {
+                const desiredPitch = parseFloat(document.getElementById('desired_roof_pitch').value);
+                const floorWidth = parseFloat(document.getElementById('floor_width').value);
+
+                if (isNaN(desiredPitch) || isNaN(floorWidth)) {
+                    alert('Please enter valid numbers for desired roof pitch and floor width.');
+                    return;
+                }
+
+                const rise = Math.tan((Math.PI / 180) * desiredPitch) * floorWidth;
+                const backHeight = parseFloat(document.getElementById('back_height').value);
+                document.getElementById('front_height').value = (backHeight + rise).toFixed(2);
+
+                drawRoof();
+            }
+        </script>
+        <div class="input-group">
             <label for="front_overhang">Front Overhang: </label>
             <input type="number" id="front_overhang" value="50" placeholder="Enter front overhang">
         </div>
