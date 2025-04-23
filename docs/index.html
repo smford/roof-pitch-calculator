@@ -79,6 +79,7 @@
             drawAngleFix = -1;
         }
 
+        /*
         // Draw back overhang in orange
         ctx.beginPath();
         ctx.strokeStyle = 'orange';
@@ -91,6 +92,7 @@
         );
         ctx.stroke();
 
+
         // Draw front overhang in purple
         ctx.beginPath();
         ctx.strokeStyle = 'purple';
@@ -100,6 +102,7 @@
         );
         ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
         ctx.stroke();
+        */
 
         // Calculate and display the roof line length
         const roofLineLength = Math.sqrt(
@@ -137,6 +140,28 @@
         );
         ctx.stroke();
         ctx.restore(); // Restore the canvas state to undo transformations
+
+        // Draw back overhang in orange
+        ctx.beginPath();
+        ctx.strokeStyle = 'orange';
+        console.log(`Drawing back overhang starting at (${startX}, ${startY + floorThickness + backHeight})`);
+        ctx.moveTo(startX, startY + floorThickness + backHeight);
+        console.log(`*** Back Overhang Line To: (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)})`);
+        ctx.lineTo(
+            startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
+            startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)
+        );
+        ctx.stroke();
+
+        // Draw front overhang in purple
+        ctx.beginPath();
+        ctx.strokeStyle = 'purple';
+        ctx.moveTo(
+            startX + floorWidth + frontoverhang * Math.cos((Math.PI / 180) * roofAngle),
+            startY + floorThickness + frontHeight - drawAngleFix * frontoverhang * Math.sin((Math.PI / 180) * roofAngle)
+        );
+        ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
+        ctx.stroke();
 
         // Update the roof pitch in the table
         const roofPitchRow = document.getElementById('roof-pitch-row').children[1];
