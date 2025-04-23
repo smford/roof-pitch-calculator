@@ -144,6 +144,7 @@
         // Draw back overhang in orange
         ctx.beginPath();
         ctx.strokeStyle = 'orange';
+        ctx.lineWidth = 3; // Set the line thickness
         console.log(`Drawing back overhang starting at (${startX}, ${startY + floorThickness + backHeight})`);
         ctx.moveTo(startX, startY + floorThickness + backHeight);
         console.log(`*** Back Overhang Line To: (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)})`);
@@ -156,6 +157,7 @@
         // Draw front overhang in purple
         ctx.beginPath();
         ctx.strokeStyle = 'purple';
+        ctx.lineWidth = 3; // Set the line thickness
         ctx.moveTo(
             startX + floorWidth + frontoverhang * Math.cos((Math.PI / 180) * roofAngle),
             startY + floorThickness + frontHeight - drawAngleFix * frontoverhang * Math.sin((Math.PI / 180) * roofAngle)
@@ -327,6 +329,8 @@
             <li><span style="color: green;">Green Line:</span> Front Height</li>
             <li><span style="color: lightblue;">Light Blue Line:</span> Floor Width</li>
             <li><span style="color: black;">Black Line:</span> Roof</li>
+            <li><span style="color: orange;">Orange Line:</span> Back Overhang</li>
+            <li><span style="color: purple;">Purple Line:</span> Front Overhang</li>
         </ul>
     </div>
 </div>
