@@ -111,7 +111,10 @@
 
         // Update the total roof length in the table
         const totalRoofLengthRow = document.getElementById('total-roof-length-row').children[1];
-        totalRoofLengthRow.textContent = `${parseFloat(roofLineLength).toFixed(2) + backoverhang + frontoverhang} units`;
+        console.log(`Roof Line Length: ${parseFloat(roofLineLength).toFixed(2)} units`);
+        console.log(`Back Overhang: ${backoverhang} units`);
+        console.log(`Front Overhang: ${frontoverhang} units`);
+        totalRoofLengthRow.textContent = `${(parseFloat(roofLineLength) + backoverhang + frontoverhang).toFixed(2)} units`;
 
         // draw a rectangle for the roof starting at the back overhang of thickness roofThickness
         ctx.save(); // Save the current canvas state
