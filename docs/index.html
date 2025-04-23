@@ -82,28 +82,14 @@
         // Draw back overhang in orange
         ctx.beginPath();
         ctx.strokeStyle = 'orange';
+        console.log(`Drawing back overhang starting at (${startX}, ${startY + floorThickness + backHeight})`);
         ctx.moveTo(startX, startY + floorThickness + backHeight);
+        console.log(`*** Back Overhang Line To: (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)})`);
         ctx.lineTo(
             startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
             startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)
         );
         ctx.stroke();
-
-        // draw a rectangle for the roof starting at the back overhang of thickness roofThickness
-        // need to rotate the canvas
-        ctx.rotate(roofAngle * (Math.PI / 180));
-        ctx.beginPath();
-        ctx.strokeStyle = 'black';
-        ctx.rect(
-            startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
-            startY + floorThickness + backHeight,
-            roofLength,
-            roofThickness
-        );
-        ctx.stroke();
-        // unrotate the canvas
-        ctx.rotate(-roofAngle * (Math.PI / 180));
-
 
         // Draw front overhang in purple
         ctx.beginPath();
@@ -118,11 +104,39 @@
         // Calculate and display the roof line length
         const roofLineLength = Math.sqrt(
             Math.pow(floorWidth, 2) + Math.pow(backHeight - frontHeight, 2)
-        ).toFixed(2);
+        );
 
         // Update the total roof length in the table
         const totalRoofLengthRow = document.getElementById('total-roof-length-row').children[1];
-        totalRoofLengthRow.textContent = `${parseFloat(roofLineLength) + backoverhang + frontoverhang} units`;
+        totalRoofLengthRow.textContent = `${parseFloat(roofLineLength).toFixed(2) + backoverhang + frontoverhang} units`;
+
+        // draw a rectangle for the roof starting at the back overhang of thickness roofThickness
+        ctx.save(); // Save the current canvas state
+        console.log(`*** Translating canvas to (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight})`);
+
+        ctx.translate(startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle), startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)); // Move the origin to the start of the backoverhang
+
+        console.log(`Rotating canvas by roof angle: ${roofAngle} degrees`);
+
+        // Rotate the canvas by the roof angle
+        // If the back height is less than the front height, rotate in the opposite direction
+        // aka: If the roof angle is negative, rotate in the opposite direction
+        if (drawAngleFix == -1) {
+            ctx.rotate((roofAngle * (Math.PI / 180)));
+        } else {
+            ctx.rotate((2 * Math.PI) - (roofAngle * (Math.PI / 180)));
+        }
+
+        ctx.beginPath();
+        ctx.strokeStyle = 'black';
+        ctx.rect(
+            0, // Start at the new origin
+            0,
+            parseFloat(roofLineLength) + backoverhang + frontoverhang,
+            roofThickness
+        );
+        ctx.stroke();
+        ctx.restore(); // Restore the canvas state to undo transformations
 
         // Update the roof pitch in the table
         const roofPitchRow = document.getElementById('roof-pitch-row').children[1];
@@ -226,7 +240,7 @@
         </div>
         <div class="input-group">
             <label for="back_height">Back Height: </label>
-            <input type="number" id="back_height" value="240" placeholder="Enter back height">
+            <input type="number" id="back_height" value="244" placeholder="Enter back height">
         </div>
         <div class="input-group">
             <label for="front_height">Front Height: </label>
