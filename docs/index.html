@@ -31,28 +31,24 @@
 
         // Draw back height in red
         ctx.beginPath();
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'red'; // Matches the key
+        ctx.lineWidth = 3; // Set the line thickness
         ctx.moveTo(startX, startY + floorThickness);
         ctx.lineTo(startX, startY + floorThickness + backHeight);
         ctx.stroke();
 
         // Draw front height in green
         ctx.beginPath();
-        ctx.strokeStyle = 'green';
+        ctx.strokeStyle = 'lime';
+        ctx.lineWidth = 3; // Set the line thickness
         ctx.moveTo(startX + floorWidth, startY + floorThickness);
         ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.strokeStyle = 'lightblue';
+        ctx.strokeStyle = 'blue'; // Matches the key
+        ctx.lineWidth = 3; // Set the line thickness
         ctx.rect(startX, startY, floorWidth, floorThickness);
-        ctx.stroke();
-
-        // Draw flat roof
-        ctx.beginPath();
-        ctx.strokeStyle = 'black';
-        ctx.moveTo(startX, startY + floorThickness + backHeight);
-        ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
         ctx.stroke();
 
         // Calculate the roof angle
@@ -99,8 +95,10 @@
             ctx.rotate((2 * Math.PI) - (roofAngle * (Math.PI / 180)));
         }
 
+        // draw the roof rectangle
         ctx.beginPath();
         ctx.strokeStyle = 'black';
+        ctx.lineWidth = 3; // Set the line thickness
         ctx.rect(
             0, // Start at the new origin
             0,
@@ -112,7 +110,7 @@
 
         // Draw back overhang in orange
         ctx.beginPath();
-        ctx.strokeStyle = 'orange';
+        ctx.strokeStyle = 'orange'; // Matches the key
         ctx.lineWidth = 3; // Set the line thickness
         console.log(`Drawing back overhang starting at (${startX}, ${startY + floorThickness + backHeight})`);
         ctx.moveTo(startX, startY + floorThickness + backHeight);
@@ -123,9 +121,9 @@
         );
         ctx.stroke();
 
-        // Draw front overhang in purple
+        // Draw front overhang in magenta
         ctx.beginPath();
-        ctx.strokeStyle = 'purple';
+        ctx.strokeStyle = 'magenta';
         ctx.lineWidth = 3; // Set the line thickness
         ctx.moveTo(
             startX + floorWidth + frontoverhang * Math.cos((Math.PI / 180) * roofAngle),
@@ -322,12 +320,12 @@
     <div style="border: 2px solid black; padding: 10px; flex: 1;">
         <h2>Key:</h2>
         <ul>
-            <li><span style="color: red;">Red Line:</span> Back Height</li>
-            <li><span style="color: green;">Green Line:</span> Front Height</li>
-            <li><span style="color: lightblue;">Light Blue Line:</span> Floor Width</li>
-            <li><span style="color: black;">Black Line:</span> Roof</li>
-            <li><span style="color: orange;">Orange Line:</span> Back Overhang</li>
-            <li><span style="color: purple;">Purple Line:</span> Front Overhang</li>
+            <li><span style="color: red; font-weight: bold;">Red Line:</span> Back Height</li>
+            <li><span style="color: lime; font-weight: bold;">Green Line:</span> Front Height</li>
+            <li><span style="color: blue; font-weight: bold;">Blue Line:</span> Floor Width</li>
+            <li><span style="color: black; font-weight: bold;">Black Line:</span> Roof</li>
+            <li><span style="color: orange; font-weight: bold;">Orange Line:</span> Back Overhang</li>
+            <li><span style="color: magenta; font-weight: bold;">Purple Line:</span> Front Overhang</li>
         </ul>
     </div>
 </div>
