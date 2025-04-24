@@ -6,12 +6,11 @@
         const floorThickness = parseFloat(document.getElementById('floor_thickness').value);
         const backHeight = parseFloat(document.getElementById('back_height').value);
         const frontHeight = parseFloat(document.getElementById('front_height').value);
-        const roofLength = parseFloat(document.getElementById('roof_length').value);
         const roofThickness = parseFloat(document.getElementById('roof_thickness').value);
         const backoverhang = parseFloat(document.getElementById('back_overhang').value);
         const frontoverhang = parseFloat(document.getElementById('front_overhang').value);
 
-        if (isNaN(floorWidth) || isNaN(backHeight) || isNaN(frontHeight) || isNaN(roofLength)) {
+        if (isNaN(floorWidth) || isNaN(backHeight) || isNaN(frontHeight)) {
             alert('Please enter valid numbers for all fields.');
             return;
         }
@@ -44,14 +43,6 @@
         ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
         ctx.stroke();
 
-        // Draw floor width in light blue
-        /*
-        ctx.beginPath();
-        ctx.strokeStyle = 'lightblue';
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(startX + floorWidth, startY);
-        ctx.stroke();
-        */
         ctx.beginPath();
         ctx.strokeStyle = 'lightblue';
         ctx.rect(startX, startY, floorWidth, floorThickness);
@@ -78,31 +69,6 @@
         if (backHeight < frontHeight) {
             drawAngleFix = -1;
         }
-
-        /*
-        // Draw back overhang in orange
-        ctx.beginPath();
-        ctx.strokeStyle = 'orange';
-        console.log(`Drawing back overhang starting at (${startX}, ${startY + floorThickness + backHeight})`);
-        ctx.moveTo(startX, startY + floorThickness + backHeight);
-        console.log(`*** Back Overhang Line To: (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)})`);
-        ctx.lineTo(
-            startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
-            startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)
-        );
-        ctx.stroke();
-
-
-        // Draw front overhang in purple
-        ctx.beginPath();
-        ctx.strokeStyle = 'purple';
-        ctx.moveTo(
-            startX + floorWidth + frontoverhang * Math.cos((Math.PI / 180) * roofAngle),
-            startY + floorThickness + frontHeight - drawAngleFix * frontoverhang * Math.sin((Math.PI / 180) * roofAngle)
-        );
-        ctx.lineTo(startX + floorWidth, startY + floorThickness + frontHeight);
-        ctx.stroke();
-        */
 
         // Calculate and display the roof line length
         const roofLineLength = Math.sqrt(
@@ -275,10 +241,6 @@
         <div class="input-group">
             <label for="front_height">Front Height: </label>
             <input type="number" id="front_height" value="250" placeholder="Enter front height">
-        </div>
-        <div class="input-group">
-            <label for="roof_length">Roof Length: </label>
-            <input type="number" id="roof_length" value="420" placeholder="Enter roof length">
         </div>
         <div class="input-group">
             <label for="roof_thickness">Roof Thickness: </label>
