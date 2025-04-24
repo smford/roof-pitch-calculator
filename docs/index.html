@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" onload="console.log('Page loaded, but roof will not be drawn automatically.')">
 <script>
+    // Set debug to true to enable console logging
+    const debug = false;
+
     function drawRoof() {
         const floorWidth = parseFloat(document.getElementById('floor_width').value);
         const floorThickness = parseFloat(document.getElementById('floor_thickness').value);
@@ -73,18 +76,18 @@
 
         // Update the total roof length in the table
         const totalRoofLengthRow = document.getElementById('total-roof-length-row').children[1];
-        console.log(`Roof Line Length: ${parseFloat(roofLineLength).toFixed(2)} units`);
-        console.log(`Back Overhang: ${backoverhang} units`);
-        console.log(`Front Overhang: ${frontoverhang} units`);
+        printToConsole(`Roof Line Length: ${parseFloat(roofLineLength).toFixed(2)} units`);
+        printToConsole(`Back Overhang: ${backoverhang} units`);
+        printToConsole(`Front Overhang: ${frontoverhang} units`);
         totalRoofLengthRow.textContent = `${(parseFloat(roofLineLength) + backoverhang + frontoverhang).toFixed(2)} units`;
 
         // draw a rectangle for the roof starting at the back overhang of thickness roofThickness
         ctx.save(); // Save the current canvas state
-        console.log(`*** Translating canvas to (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight})`);
+        printToConsole(`Translating canvas to (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight})`);
 
         ctx.translate(startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle), startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)); // Move the origin to the start of the backoverhang
 
-        console.log(`Rotating canvas by roof angle: ${roofAngle} degrees`);
+        printToConsole(`Rotating canvas by roof angle: ${roofAngle} degrees`);
 
         // Rotate the canvas by the roof angle
         // If the back height is less than the front height, rotate in the opposite direction
@@ -112,9 +115,9 @@
         ctx.beginPath();
         ctx.strokeStyle = 'orange'; // Matches the key
         ctx.lineWidth = 3; // Set the line thickness
-        console.log(`Drawing back overhang starting at (${startX}, ${startY + floorThickness + backHeight})`);
+        printToConsole(`Drawing back overhang starting at (${startX}, ${startY + floorThickness + backHeight})`);
         ctx.moveTo(startX, startY + floorThickness + backHeight);
-        console.log(`*** Back Overhang Line To: (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)})`);
+        printToConsole(`Back Overhang Line To: (${startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle)}, ${startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)})`);
         ctx.lineTo(
             startX - backoverhang * Math.cos((Math.PI / 180) * roofAngle),
             startY + floorThickness + backHeight + drawAngleFix * backoverhang * Math.sin((Math.PI / 180) * roofAngle)
@@ -158,10 +161,10 @@
             frontHeight + frontoverhang * Math.sin(Math.PI * roofAngle / 180)
         );
 
-        console.log(`Calculated Max Height (before adjustments): ${calculatedMaxHeight}`);
-        console.log(`Roof Thickness: ${roofThickness}, Floor Thickness: ${floorThickness}`);
+        printToConsole(`Calculated Max Height (before adjustments): ${calculatedMaxHeight}`);
+        printToConsole(`Roof Thickness: ${roofThickness}, Floor Thickness: ${floorThickness}`);
         calculatedMaxHeight = calculatedMaxHeight + roofThickness + floorThickness;
-        console.log(`Calculated Max Height (after adjustments): ${calculatedMaxHeight}`);
+        printToConsole(`Calculated Max Height (after adjustments): ${calculatedMaxHeight}`);
 
         // Update the maximum height in the table
         const calculatedMaxHeightRow = document.getElementById('maximum-height-row').children[1];
@@ -172,7 +175,13 @@
     document.addEventListener('DOMContentLoaded', drawRoof);
 
     function updateCanvasDimensionsInKey(canvas) {
-        console.log(`Canvas Dimensions: Width = ${canvas.width}px, Height = ${canvas.height}px`);
+        printToConsole(`Canvas Dimensions: Width = ${canvas.width}px, Height = ${canvas.height}px`);
+    }
+
+    function printToConsole(message) {
+        if (debug) {
+            console.log(message);
+        }
     }
 
     // function to reduce a fraction to its simplest form
